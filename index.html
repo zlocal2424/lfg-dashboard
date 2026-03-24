@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LFG Corporate Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FBF7F0;
+    --warm-white: #FFFFFF;
+    --parchment: #F2EBE0;
+    --border: #E8DDD0;
+    --border-light: #F0E8DC;
+
+    /* Vegetable palette */
+    --tomato: #C94F3A;
+    --tomato-light: #F5E8E6;
+    --herb: #4A7C59;
+    --herb-light: #E8F2EC;
+    --herb-mid: #6B9E7A;
+    --carrot: #D4783A;
+    --carrot-light: #FDF0E8;
+    --lemon: #C8A94A;
+    --lemon-light: #FBF5E6;
+    --beet: #7B4A6B;
+    --beet-light: #F2EAF0;
+    --eggplant: #4A3B5C;
+    --sky: #4A7FA5;
+    --sky-light: #E8F2F8;
+
+    /* Text */
+    --text-dark: #2D2820;
+    --text-mid: #5C4F42;
+    --text-light: #8C7D6E;
+    --text-faint: #B8A898;
+
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 16px rgba(45,40,32,0.08);
+    --shadow-sm: 0 1px 6px rgba(45,40,32,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--text-dark);
+    font-family: 'Nunito Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--warm-white);
+    border-bottom: 2px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--herb);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    color: white;
+    font-style: italic;
+    font-weight: 400;
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-dark);
+    letter-spacing: 0.01em;
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 400;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .last-updated {
+    font-size: 13px;
+    color: var(--text-light);
+    background: var(--parchment);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .refresh-btn {
+    background: var(--herb);
+    border: none;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .refresh-btn:hover {
+    background: var(--herb-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74,124,89,0.3);
+  }
+
+  /* ── LOCATION TABS ── */
+  .location-bar {
+    background: var(--warm-white);
+    padding: 16px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .location-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .location-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .loc-tab {
+    padding: 8px 20px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid var(--border);
+    background: var(--cream);
+    color: var(--text-mid);
+    font-family: 'Nunito Sans', sans-serif;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .loc-tab:hover {
+    border-color: var(--herb);
+    color: var(--herb);
+    background: var(--herb-light);
+  }
+
+  .loc-tab.active {
+    background: var(--herb);
+    border-color: var(--herb);
+    color: white;
+    box-shadow: 0 3px 10px rgba(74,124,89,0.25);
+  }
+
+  /* ── MAIN GRID ── */
+  .main {
+    padding: 32px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 1400px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--warm-white);
+  }
+
+  .card-title {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .card-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .tag-green {
+    background: var(--herb-light);
+    color: var(--herb);
+  }
+
+  .tag-orange {
+    background: var(--carrot-light);
+    color: var(--carrot);
+  }
+
+  /* ── SALES BIG METRICS ── */
+  .sales-hero {
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .metric-card {
+    background: var(--cream);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 20px 22px;
+    transition: transform 0.15s;
+  }
+
+  .metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .metric-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .metric-value {
+    font-family: 'Nunito', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .metric-sub {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 400;
+  }
+
+  .metric-var-pos {
+    font-family: 'Nunito', sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--herb);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .metric-var-neg {
+    font-family: 'Nunito', sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--tomato);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  /* ── MONTH TABLE ── */
+  .month-section {
+    border-top: 1px solid var(--border-light);
+  }
+
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    font-weight: 700;
+    padding: 14px 28px 10px;
+  }
+
+  .month-table-header {
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr 80px;
+    padding: 8px 28px;
+    background: var(--parchment);
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+    font-weight: 700;
+  }
+
+  .th:last-child { text-align: right; }
+
+  .month-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr 80px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border-light);
+    align-items: center;
+    transition: background 0.12s;
+  }
+
+  .month-row:last-child { border-bottom: none; }
+  .month-row:hover { background: var(--cream); }
+
+  .month-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .month-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .live-badge {
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 8px;
+    background: var(--herb-light);
+    color: var(--herb);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px solid rgba(74,124,89,0.2);
+  }
+
+  .month-val {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .month-ly-val {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-mid);
+  }
+
+  .month-var {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .pos { color: var(--herb); }
+  .neg { color: var(--tomato); }
+  .cur { color: var(--lemon); }
+
+  /* ── LABOR PANEL ── */
+  .labor-scroll {
+    max-height: 560px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .labor-scroll::-webkit-scrollbar { width: 5px; }
+  .labor-scroll::-webkit-scrollbar-track { background: transparent; }
+  .labor-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .period-block {
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .period-block:last-child { border-bottom: none; }
+
+  .period-summary {
+    display: grid;
+    grid-template-columns: 110px 1fr 1fr;
+    padding: 16px 28px;
+    cursor: pointer;
+    align-items: center;
+    transition: background 0.12s;
+    gap: 12px;
+  }
+
+  .period-summary:hover { background: var(--cream); }
+
+  .period-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .period-status {
+    font-size: 11px;
+    color: var(--carrot);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .pct-block { }
+
+  .pct-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .foh-label { color: var(--herb); }
+  .boh-label { color: var(--sky); }
+
+  .pct-val {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .foh-val { color: var(--herb); }
+  .boh-val { color: var(--sky); }
+
+  .period-detail {
+    display: none;
+    background: var(--cream);
+    border-top: 1px solid var(--border-light);
+  }
+
+  .period-detail.open { display: block; }
+
+  .pp-header {
+    display: grid;
+    grid-template-columns: 70px 100px 1fr 90px 90px;
+    padding: 8px 28px 8px 44px;
+    background: var(--parchment);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .pp-th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-light);
+    font-weight: 700;
+  }
+
+  .pp-row {
+    display: grid;
+    grid-template-columns: 70px 100px 1fr 90px 90px;
+    padding: 13px 28px 13px 44px;
+    border-bottom: 1px solid var(--border-light);
+    align-items: center;
+    transition: background 0.12s;
+  }
+
+  .pp-row:last-child { border-bottom: none; }
+  .pp-row:hover { background: var(--warm-white); }
+
+  .pp-num {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-mid);
+  }
+
+  .pp-date {
+    font-size: 14px;
+    color: var(--text-mid);
+    font-weight: 400;
+  }
+
+  .pp-wages {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .pp-pct {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  /* ── LOADING ── */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 220px;
+    color: var(--text-light);
+    font-size: 15px;
+    gap: 10px;
+  }
+
+  .dot-pulse {
+    display: inline-flex;
+    gap: 5px;
+  }
+
+  .dot-pulse span {
+    width: 6px;
+    height: 6px;
+    background: var(--herb);
+    border-radius: 50%;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.35s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CHEVRON ── */
+  .chevron {
+    font-size: 12px;
+    color: var(--text-faint);
+    transition: transform 0.2s;
+    margin-left: auto;
+  }
+
+  .period-summary.expanded .chevron {
+    transform: rotate(180deg);
+  }
+
+  .period-summary-inner {
+    display: flex;
+    align-items: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">
+    <div class="logo-mark">LF</div>
+    <div>
+      <div class="header-title">Local Foods Group</div>
+      <div class="header-subtitle">Corporate Performance Dashboard</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="last-updated" id="lastUpdated">Loading…</span>
+    <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+  </div>
+</div>
+
+<div class="location-bar">
+  <span class="location-label">Location</span>
+  <div class="location-tabs" id="locationTabs"></div>
+</div>
+
+<div class="main" id="mainContent">
+  <div class="loading" style="grid-column:1/-1">
+    Loading your data
+    <div class="dot-pulse"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<script>
+const SITE = 'https://netorgft7093466.sharepoint.com/sites/LFGCorporate';
+const SALES_LIST = 'LFG Sales Dashboard';
+const LABOR_LIST = 'LFG Labor Dashboard';
+
+const LOCATIONS = ['RVIL','UKD','POAK','HTS','MILT','MAX','LFM'];
+const LOCATION_NAMES = {
+  RVIL: 'Rice Village', UKD: 'Upper Kirby', POAK: 'Post Oak',
+  HTS: 'Heights', MILT: "Milton's & Lee's", MAX: 'Maximo', LFM: 'LFM Rice U'
+};
+
+let salesData = [];
+let laborData = [];
+let currentLoc = 'RVIL';
+
+async function fetchList(listName, select) {
+  const url = `${SITE}/_api/web/lists/getbytitle('${encodeURIComponent(listName)}')/items?$select=${select}&$top=500`;
+  const res = await fetch(url, {
+    headers: { 'Accept': 'application/json;odata=nometadata' },
+    credentials: 'include'
+  });
+  if (!res.ok) throw new Error(`Failed to fetch ${listName}: ${res.status}`);
+  return (await res.json()).value;
+}
+
+async function loadData() {
+  document.getElementById('mainContent').innerHTML =
+    '<div class="loading" style="grid-column:1/-1">Loading your data <div class="dot-pulse"><span></span><span></span><span></span></div></div>';
+
+  try {
+    [salesData, laborData] = await Promise.all([
+      fetchList(SALES_LIST, 'Location,MonthName,MonthNumber,CurrentMTD,CurrentTRUE,LYMTD,LYFullMonth,Variance,IsClosed,LastUpdated'),
+      fetchList(LABOR_LIST, 'Location,PeriodNumber,PayPeriodNumber,PeriodEndDate,FOHWages,FOHPct,BOHWages,BOHPct,IsComplete,IsAverage')
+    ]);
+
+    const latest = salesData.reduce((a,b) =>
+      new Date(a.LastUpdated||0) > new Date(b.LastUpdated||0) ? a : b, salesData[0]);
+    if (latest?.LastUpdated) {
+      const d = new Date(latest.LastUpdated);
+      document.getElementById('lastUpdated').textContent =
+        `Refreshed ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} at ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;
+    }
+
+    buildTabs();
+    renderDashboard();
+  } catch(e) {
+    document.getElementById('mainContent').innerHTML =
+      `<div class="loading" style="grid-column:1/-1;color:#C94F3A;flex-direction:column;gap:8px">
+        <span>⚠ Could not load data</span>
+        <span style="font-size:13px;color:#8C7D6E">Please ensure you are signed into SharePoint</span>
+      </div>`;
+    console.error(e);
+  }
+}
+
+function buildTabs() {
+  document.getElementById('locationTabs').innerHTML = LOCATIONS.map(loc =>
+    `<button class="loc-tab ${loc===currentLoc?'active':''}" onclick="selectLoc('${loc}')">${loc}</button>`
+  ).join('');
+}
+
+function selectLoc(loc) {
+  currentLoc = loc;
+  buildTabs();
+  renderDashboard();
+}
+
+function fmt(n) {
+  if (n == null) return '—';
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+
+function fmtPct(n) {
+  if (n == null) return '—';
+  const pct = (n * 100).toFixed(1);
+  return (n >= 0 ? '+' : '') + pct + '%';
+}
+
+function fmtLaborPct(n) {
+  if (!n) return '—';
+  return (n * 100).toFixed(1) + '%';
+}
+
+function varClass(n) {
+  if (n == null) return '';
+  return n >= 0 ? 'pos' : 'neg';
+}
+
+function renderDashboard() {
+  const locSales = salesData.filter(r => r.Location === currentLoc).sort((a,b) => a.MonthNumber - b.MonthNumber);
+  const locLabor = laborData.filter(r => r.Location === currentLoc);
+  const currentMonth = locSales.find(r => !r.IsClosed);
+  const closedMonths = [...locSales.filter(r => r.IsClosed)].reverse();
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="card fade-in">
+      ${renderSales(currentMonth, closedMonths)}
+    </div>
+    <div class="card fade-in" style="animation-delay:0.1s">
+      ${renderLabor(locLabor)}
+    </div>
+  `;
+
+  document.querySelectorAll('.period-summary').forEach(el => {
+    el.addEventListener('click', () => {
+      const detail = el.nextElementSibling;
+      const isOpen = detail.classList.contains('open');
+      detail.classList.toggle('open', !isOpen);
+      el.classList.toggle('expanded', !isOpen);
+    });
+  });
+}
+
+function renderSales(cur, closed) {
+  const locName = LOCATION_NAMES[currentLoc] || currentLoc;
+  return `
+    <div class="card-header">
+      <div>
+        <div class="card-title">Sales — ${locName}</div>
+      </div>
+      <span class="card-tag tag-green">${cur ? cur.MonthName + ' ' + new Date().getFullYear() : 'Closed'}</span>
+    </div>
+
+    ${cur ? `
+    <div class="sales-hero">
+      <div class="metric-card">
+        <div class="metric-label">Current MTD</div>
+        <div class="metric-value">${fmt(cur.CurrentMTD)}</div>
+        <div class="metric-sub">Gross sales this month</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Current TRUE</div>
+        <div class="metric-value">${fmt(cur.CurrentTRUE)}</div>
+        <div class="metric-sub">Net of pass-through</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">LY Same Period</div>
+        <div class="metric-value">${fmt(cur.LYMTD)}</div>
+        <div class="metric-sub">Last year through today</div>
+      </div>
+      <div class="metric-card" style="background:${cur.Variance >= 0 ? 'var(--herb-light)' : 'var(--tomato-light)'};border-color:${cur.Variance >= 0 ? 'rgba(74,124,89,0.2)' : 'rgba(201,79,58,0.2)'}">
+        <div class="metric-label">MTD Variance</div>
+        <div class="${cur.Variance >= 0 ? 'metric-var-pos' : 'metric-var-neg'}">${fmtPct(cur.Variance)}</div>
+        <div class="metric-sub">vs last year MTD</div>
+      </div>
+    </div>
+    ` : '<div class="loading" style="height:180px">No live month data</div>'}
+
+    <div class="month-section">
+      <div class="section-label">Month-by-Month</div>
+      <div class="month-table-header">
+        <span class="th">Month</span>
+        <span class="th">Net Sales</span>
+        <span class="th">LY Full Month</span>
+        <span class="th" style="text-align:right">Variance</span>
+      </div>
+      ${cur ? `
+      <div class="month-row">
+        <div class="month-name-cell">
+          <span class="month-name">${cur.MonthName}</span>
+          <span class="live-badge">Live</span>
+        </div>
+        <span class="month-val">${fmt(cur.CurrentTRUE)}</span>
+        <span class="month-ly-val">${fmt(cur.LYFullMonth)}</span>
+        <span class="month-var cur">${fmtPct(cur.Variance)}</span>
+      </div>` : ''}
+      ${closed.map(m => `
+      <div class="month-row">
+        <span class="month-name">${m.MonthName}</span>
+        <span class="month-val">${fmt(m.CurrentTRUE)}</span>
+        <span class="month-ly-val">${fmt(m.LYFullMonth)}</span>
+        <span class="month-var ${varClass(m.Variance)}">${fmtPct(m.Variance)}</span>
+      </div>`).join('')}
+    </div>
+  `;
+}
+
+function renderLabor(rows) {
+  const locName = LOCATION_NAMES[currentLoc] || currentLoc;
+  const periods = {};
+  rows.forEach(r => {
+    if (!periods[r.PeriodNumber]) periods[r.PeriodNumber] = { avg: null, pps: [] };
+    if (r.IsAverage) periods[r.PeriodNumber].avg = r;
+    else periods[r.PeriodNumber].pps.push(r);
+  });
+
+  const nums = Object.keys(periods).map(Number).sort((a,b) => b - a);
+
+  return `
+    <div class="card-header">
+      <div class="card-title">Labor — ${locName}</div>
+      <span class="card-tag tag-orange">FOH & BOH</span>
+    </div>
+    <div style="display:grid;grid-template-columns:110px 1fr 1fr;padding:10px 28px;background:var(--parchment);border-bottom:1px solid var(--border-light)">
+      <span class="th">Period</span>
+      <span class="th" style="color:var(--herb)">FOH Avg %</span>
+      <span class="th" style="color:var(--sky)">BOH Avg %</span>
+    </div>
+    <div class="labor-scroll">
+      ${nums.length === 0 ? '<div class="loading">No labor data</div>' :
+        nums.map(pNum => {
+          const p = periods[pNum];
+          const avg = p.avg;
+          const pps = p.pps.sort((a,b) => a.PayPeriodNumber - b.PayPeriodNumber);
+          const inProgress = !avg && pps.length > 0;
+
+          return `
+          <div class="period-block">
+            <div class="period-summary ${inProgress ? 'expanded' : ''}">
+              <div>
+                <div class="period-name">Period ${pNum}</div>
+                ${inProgress ? '<div class="period-status">In Progress</div>' : ''}
+              </div>
+              <div class="pct-block">
+                <div class="pct-label foh-label">FOH</div>
+                <div class="pct-val foh-val">${avg ? fmtLaborPct(avg.FOHPct) : '—'}</div>
+              </div>
+              <div class="pct-block">
+                <div class="pct-label boh-label">BOH</div>
+                <div class="pct-val boh-val">${avg ? fmtLaborPct(avg.BOHPct) : '—'}</div>
+              </div>
+            </div>
+            <div class="period-detail ${inProgress ? 'open' : ''}">
+              <div class="pp-header">
+                <span class="pp-th">PP</span>
+                <span class="pp-th">End Date</span>
+                <span class="pp-th">FOH Wages</span>
+                <span class="pp-th" style="color:var(--herb)">FOH %</span>
+                <span class="pp-th" style="color:var(--sky)">BOH %</span>
+              </div>
+              ${pps.map(pp => `
+              <div class="pp-row">
+                <span class="pp-num">PP ${pp.PayPeriodNumber}</span>
+                <span class="pp-date">${pp.PeriodEndDate ? new Date(pp.PeriodEndDate+'T12:00:00').toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'2-digit'}) : '—'}</span>
+                <span class="pp-wages">${fmt(pp.FOHWages)}</span>
+                <span class="pp-pct foh-val">${fmtLaborPct(pp.FOHPct)}</span>
+                <span class="pp-pct boh-val">${fmtLaborPct(pp.BOHPct)}</span>
+              </div>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+    </div>
+  `;
+}
+
+loadData();
+</script>
+</body>
+</html>
