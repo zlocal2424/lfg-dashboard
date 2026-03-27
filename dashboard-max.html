@@ -4,18 +4,85 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Maximo — LFG Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@700;800&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#FBF7F0; font-family:'Nunito Sans',sans-serif; }
-  .header { background:white; border-bottom:2px solid #E8DDD0; padding:20px 40px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 1px 6px rgba(45,40,32,0.06); }
+  body { background:#FBF7F0; font-family:'DM Sans',sans-serif; }
+  .header { background:white; border-bottom:2px solid #E8DDD0; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 1px 6px rgba(45,40,32,0.06); flex-wrap:wrap; gap:10px; }
   .logo-wrap { display:flex; align-items:center; gap:12px; }
-  .logo-mark { width:36px; height:36px; background:#4A7C59; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:15px; color:white; font-style:italic; }
-  .header-title { font-family:'Lora',serif; font-size:22px; font-weight:600; color:#2D2820; }
-  .header-sub { font-size:13px; color:#8C7D6E; }
-  .updated { font-size:13px; color:#8C7D6E; background:#F2EBE0; padding:6px 14px; border-radius:20px; border:1px solid #E8DDD0; }
-  .content { padding:32px 40px; max-width:1400px; display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-</style>
+  .logo-mark { width:36px; height:36px; background:#4A7C59; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'DM Sans',sans-serif; font-size:15px; color:white; font-style:italic; flex-shrink:0; }
+  .header-title { font-family:'DM Sans',sans-serif; font-size:20px; font-weight:600; color:#2D2820; }
+  .header-sub { font-size:12px; color:#8C7D6E; }
+  .updated { font-size:12px; color:#8C7D6E; background:#F2EBE0; padding:5px 12px; border-radius:20px; border:1px solid #E8DDD0; white-space:nowrap; }
+  .loc-bar { background:white; padding:12px 24px; border-bottom:1px solid #E8DDD0; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .loc-label { font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:#8C7D6E; font-weight:600; }
+  .loc-tab { padding:6px 16px; border-radius:24px; font-size:13px; font-weight:600; cursor:pointer; border:2px solid #E8DDD0; background:#FBF7F0; color:#5C4F42; font-family:'DM Sans',sans-serif; transition:all .15s; }
+  .loc-tab:hover { border-color:#4A7C59; color:#4A7C59; background:#E8F2EC; }
+  .loc-tab.active { background:#4A7C59; border-color:#4A7C59; color:white; }
+  .content { padding:20px 24px; max-width:1400px; }
+  .panel { display:none; grid-template-columns:1fr 1fr; gap:20px; }
+  .panel.active { display:grid; }
+  .single-panel { display:grid; grid-template-columns:1fr 1fr; gap:20px; padding:20px 24px; max-width:1400px; }
+  .card { background:white; border:1px solid #E8DDD0; border-radius:12px; overflow:hidden; box-shadow:0 2px 16px rgba(45,40,32,0.08); }
+  .card-header { padding:16px 24px; border-bottom:1px solid #F0E8DC; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .card-title { font-family:'DM Sans',sans-serif; font-size:17px; font-weight:600; color:#2D2820; }
+  .card-tag { font-size:11px; padding:3px 9px; border-radius:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+  .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:20px; }
+  .metric-box { background:#F2EBE0; border:1px solid #E8DDD0; border-radius:10px; padding:16px; }
+  .metric-label { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#8C7D6E; font-weight:700; margin-bottom:8px; }
+  .metric-value { font-family:'DM Sans',sans-serif; font-size:30px; font-weight:700; color:#2D2820; line-height:1; margin-bottom:4px; }
+  .metric-sub { font-size:12px; color:#8C7D6E; }
+  .metric-var-pos { font-family:'DM Sans',sans-serif; font-size:28px; font-weight:700; color:#4A7C59; line-height:1; margin-bottom:4px; }
+  .metric-var-neg { font-family:'DM Sans',sans-serif; font-size:28px; font-weight:700; color:#C94F3A; line-height:1; margin-bottom:4px; }
+  .section-label { font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:#8C7D6E; font-weight:700; padding:12px 24px 8px; }
+  .month-thead { display:grid; grid-template-columns:80px 1fr 1fr 70px; padding:8px 24px; background:#F2EBE0; border-top:1px solid #E8DDD0; border-bottom:1px solid #E8DDD0; }
+  .month-row { display:grid; grid-template-columns:80px 1fr 1fr 70px; padding:12px 24px; border-bottom:1px solid #F0E8DC; align-items:center; }
+  .month-row:last-child { border-bottom:none; }
+  .th { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#8C7D6E; font-weight:700; }
+  .month-name { font-size:14px; font-weight:700; color:#2D2820; }
+  .live-badge { font-size:9px; padding:2px 6px; border-radius:8px; background:#E8F2EC; color:#4A7C59; font-weight:800; text-transform:uppercase; border:1px solid rgba(74,124,89,0.2); margin-left:4px; }
+  .month-val { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; color:#2D2820; }
+  .month-ly { font-family:'DM Sans',sans-serif; font-size:13px; color:#5C4F42; }
+  .month-var { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; text-align:right; }
+  .pos { color:#4A7C59; }
+  .neg { color:#C94F3A; }
+  .cur { color:#C8A94A; }
+  .labor-scroll { max-height:500px; overflow-y:auto; }
+  .period-row { background:#F8F5F0; border-bottom:1px solid #E8DDD0; cursor:pointer; }
+  .period-row td { padding:12px 20px; }
+  .period-name { font-size:15px; font-weight:700; color:#2D2820; }
+  .period-status { font-size:11px; color:#D4783A; font-weight:600; margin-top:2px; }
+  .period-pct-foh { font-family:'DM Sans',sans-serif; font-size:18px; font-weight:700; color:#4A7C59; }
+  .period-pct-boh { font-family:'DM Sans',sans-serif; font-size:18px; font-weight:700; color:#4A7FA5; }
+  table { width:100%; border-collapse:collapse; }
+  th { padding:10px 20px; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#8C7D6E; font-weight:700; background:#F2EBE0; border-bottom:1px solid #E8DDD0; }
+ 
+  @media (max-width: 768px) {
+    .panel.active { grid-template-columns:1fr; }
+    .single-panel { grid-template-columns:1fr; }
+    .hero-grid { grid-template-columns:1fr 1fr; gap:10px; }
+    .metric-value { font-size:24px; }
+    .metric-var-pos, .metric-var-neg { font-size:22px; }
+    .month-thead { grid-template-columns:60px 1fr 1fr 60px; padding:8px 12px; }
+    .month-row { grid-template-columns:60px 1fr 1fr 60px; padding:10px 12px; }
+    .card-header { padding:12px 16px; }
+    .section-label { padding:10px 16px 6px; }
+    .header { padding:12px 16px; }
+    .content { padding:12px 16px; }
+    .loc-bar { padding:10px 16px; }
+    .labor-scroll { max-height:400px; }
+    .period-pct-foh, .period-pct-boh { font-size:15px; }
+  }
+ 
+  @media (max-width: 480px) {
+    .hero-grid { grid-template-columns:1fr; }
+    .metric-value { font-size:28px; }
+    .month-thead { display:none; }
+    .month-row { grid-template-columns:50px 1fr 60px; gap:4px; }
+    .month-ly { display:none; }
+    .header-title { font-size:16px; }
+  }
+  </style>
 </head>
 <body>
 <div class="header">
@@ -26,192 +93,173 @@
       <div class="header-sub">Performance Dashboard</div>
     </div>
   </div>
-  <div class="updated">Updated March 27, 2026 at 1:01 PM</div>
+  <div class="updated">Updated March 27, 2026 at 5:01 PM</div>
 </div>
-<div class="content">
-  
-      <div style="background:white;border:1px solid #E8DDD0;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(45,40,32,0.08)">
-        <div style="padding:18px 28px;border-bottom:1px solid #F0E8DC;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#2D2820">Sales Performance</div>
-          <span style="font-size:11px;padding:4px 10px;border-radius:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#E8F2EC;color:#4A7C59">MAR 2026</span>
+<div class="single-panel">
+  <div class="card">
+      <div class="card-header">
+        <div class="card-title">Sales Performance</div>
+        <span class="card-tag" style="background:#E8F2EC;color:#4A7C59">MAR 2026</span>
+      </div>
+      
+      <div class="hero-grid">
+        <div class="metric-box">
+          <div class="metric-label">Current MTD</div>
+          <div class="metric-value">$178,112</div>
+          <div class="metric-sub">Gross sales</div>
         </div>
-        
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:24px">
-        <div style="background:#F2EBE0;border:1px solid #E8DDD0;border-radius:10px;padding:20px">
-          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700;margin-bottom:10px">Current MTD</div>
-          <div style="font-family:Georgia,serif;font-size:34px;font-weight:700;color:#2D2820;line-height:1;margin-bottom:6px">$178,112</div>
-          <div style="font-size:13px;color:#8C7D6E">Gross sales this month</div>
+        <div class="metric-box">
+          <div class="metric-label">Current TRUE</div>
+          <div class="metric-value">$178,112</div>
+          <div class="metric-sub">Net of pass-through</div>
         </div>
-        <div style="background:#F2EBE0;border:1px solid #E8DDD0;border-radius:10px;padding:20px">
-          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700;margin-bottom:10px">Current TRUE</div>
-          <div style="font-family:Georgia,serif;font-size:34px;font-weight:700;color:#2D2820;line-height:1;margin-bottom:6px">$178,112</div>
-          <div style="font-size:13px;color:#8C7D6E">Net of pass-through</div>
+        <div class="metric-box">
+          <div class="metric-label">LY Same Period</div>
+          <div class="metric-value">$75,686</div>
+          <div class="metric-sub">Last year through today</div>
         </div>
-        <div style="background:#F2EBE0;border:1px solid #E8DDD0;border-radius:10px;padding:20px">
-          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700;margin-bottom:10px">LY Same Period</div>
-          <div style="font-family:Georgia,serif;font-size:34px;font-weight:700;color:#2D2820;line-height:1;margin-bottom:6px">$75,686</div>
-          <div style="font-size:13px;color:#8C7D6E">Last year through today</div>
-        </div>
-        <div style="background:#E8F2EC;border:1px solid rgba(74,124,89,0.2);border-radius:10px;padding:20px">
-          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700;margin-bottom:10px">MTD Variance</div>
-          <div style="font-family:Georgia,serif;font-size:34px;font-weight:700;color:#4A7C59;line-height:1;margin-bottom:6px">+135.3%</div>
-          <div style="font-size:13px;color:#8C7D6E">vs last year MTD</div>
+        <div class="metric-box" style="background:#E8F2EC;border-color:rgba(74,124,89,0.2)">
+          <div class="metric-label">MTD Variance</div>
+          <div class="metric-var-pos">+135.3%</div>
+          <div class="metric-sub">vs last year MTD</div>
         </div>
       </div>
-        <div style="border-top:1px solid #F0E8DC">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#8C7D6E;font-weight:700;padding:14px 28px 10px">Month by Month</div>
-          <table style="width:100%;border-collapse:collapse">
-            <thead><tr style="background:#F2EBE0;border-bottom:1px solid #E8DDD0">
-              <th style="padding:10px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700">Month</th>
-              <th style="padding:10px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700">Net Sales</th>
-              <th style="padding:10px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700">LY Full Month</th>
-              <th style="padding:10px 20px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700">Variance</th>
+      <div style="border-top:1px solid #F0E8DC">
+        <div class="section-label">Month by Month</div>
+        <div class="month-thead">
+          <span class="th">Month</span>
+          <span class="th">Net Sales</span>
+          <span class="th">LY Full Mo.</span>
+          <span class="th" style="text-align:right">Var</span>
+        </div>
+        <div class="month-row">
+        <span class="month-name">MAR<span class="live-badge">Live</span></span>
+        <span class="month-val">$178,112</span>
+        <span class="month-ly">$0</span>
+        <span class="month-var cur">+135.3%</span>
+      </div><div class="month-row">
+        <span class="month-name">FEB</span>
+        <span class="month-val">$193,795</span>
+        <span class="month-ly">$90,287</span>
+        <span class="month-var pos">+114.6%</span>
+      </div><div class="month-row">
+        <span class="month-name">JAN</span>
+        <span class="month-val">$192,196</span>
+        <span class="month-ly">$39,734</span>
+        <span class="month-var pos">+383.7%</span>
+      </div>
+      </div>
+    </div>
+  <div class="card">
+      <div class="card-header">
+        <div class="card-title">Labor — FOH & BOH</div>
+        <span class="card-tag" style="background:#FDF0E8;color:#D4783A">Tap period to expand</span>
+      </div>
+      <div class="labor-scroll">
+        <table>
+          <thead><tr>
+            <th>Period</th>
+            <th style="color:#4A7C59">FOH Avg %</th>
+            <th style="color:#4A7FA5">BOH Avg %</th>
+          </tr></thead>
+          <tbody><tr class="period-row" onclick="toggleDetail('d-MAX-4')">
+        <td><div class="period-name">Period 4</div><div class="period-status">In Progress</div></td>
+        <td class="period-pct-foh">—</td>
+        <td class="period-pct-boh">—</td>
+      </tr>
+      <tr id="d-MAX-4" style="display:table-row">
+        <td colspan="3" style="padding:0;background:#F2EBE0">
+          <table>
+            <thead><tr>
+              <th style="padding-left:32px">Pay Period</th>
+              <th style="color:#4A7C59">FOH %</th>
+              <th style="color:#4A7FA5">BOH %</th>
             </tr></thead>
-            <tbody><tr style="background:#FFFEF8">
-        <td style="padding:14px 20px;font-size:15px;font-weight:700;color:#2D2820">MAR <span style="font-size:10px;padding:2px 8px;background:#E8F2EC;color:#4A7C59;border-radius:8px;font-weight:800;border:1px solid rgba(74,124,89,0.2)">LIVE</span></td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#2D2820">$178,112</td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:15px;color:#5C4F42">$0</td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#C8A94A;text-align:right">+135.3%</td>
-      </tr><tr style="border-bottom:1px solid #F0E8DC">
-        <td style="padding:14px 20px;font-size:15px;font-weight:700;color:#2D2820">FEB</td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#2D2820">$193,795</td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:15px;color:#5C4F42">$90,287</td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#4A7C59;text-align:right">+114.6%</td>
-      </tr><tr style="border-bottom:1px solid #F0E8DC">
-        <td style="padding:14px 20px;font-size:15px;font-weight:700;color:#2D2820">JAN</td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#2D2820">$192,196</td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:15px;color:#5C4F42">$39,734</td>
-        <td style="padding:14px 20px;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#4A7C59;text-align:right">+383.7%</td>
+            <tbody><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
+          <td style="padding:8px 20px 8px 32px;font-size:12px;color:#5C4F42">PP 7 <span style="color:#B8A898">3/22/26</span></td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7C59">7.8%</td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7FA5">11.2%</td>
+        </tr></tbody>
+          </table>
+        </td>
+      </tr><tr class="period-row" onclick="toggleDetail('d-MAX-3')">
+        <td><div class="period-name">Period 3</div></td>
+        <td class="period-pct-foh">7.5%</td>
+        <td class="period-pct-boh">11.4%</td>
+      </tr>
+      <tr id="d-MAX-3" style="display:none">
+        <td colspan="3" style="padding:0;background:#F2EBE0">
+          <table>
+            <thead><tr>
+              <th style="padding-left:32px">Pay Period</th>
+              <th style="color:#4A7C59">FOH %</th>
+              <th style="color:#4A7FA5">BOH %</th>
+            </tr></thead>
+            <tbody><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
+          <td style="padding:8px 20px 8px 32px;font-size:12px;color:#5C4F42">PP 5 <span style="color:#B8A898">2/22/26</span></td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7C59">7.3%</td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7FA5">11.0%</td>
+        </tr><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
+          <td style="padding:8px 20px 8px 32px;font-size:12px;color:#5C4F42">PP 6 <span style="color:#B8A898">3/8/26</span></td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7C59">7.7%</td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7FA5">11.7%</td>
+        </tr></tbody>
+          </table>
+        </td>
+      </tr><tr class="period-row" onclick="toggleDetail('d-MAX-2')">
+        <td><div class="period-name">Period 2</div></td>
+        <td class="period-pct-foh">9.1%</td>
+        <td class="period-pct-boh">13.3%</td>
+      </tr>
+      <tr id="d-MAX-2" style="display:none">
+        <td colspan="3" style="padding:0;background:#F2EBE0">
+          <table>
+            <thead><tr>
+              <th style="padding-left:32px">Pay Period</th>
+              <th style="color:#4A7C59">FOH %</th>
+              <th style="color:#4A7FA5">BOH %</th>
+            </tr></thead>
+            <tbody><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
+          <td style="padding:8px 20px 8px 32px;font-size:12px;color:#5C4F42">PP 3 <span style="color:#B8A898">1/25/26</span></td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7C59">9.8%</td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7FA5">14.1%</td>
+        </tr><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
+          <td style="padding:8px 20px 8px 32px;font-size:12px;color:#5C4F42">PP 4 <span style="color:#B8A898">2/8/26</span></td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7C59">8.4%</td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7FA5">12.5%</td>
+        </tr></tbody>
+          </table>
+        </td>
+      </tr><tr class="period-row" onclick="toggleDetail('d-MAX-1')">
+        <td><div class="period-name">Period 1</div></td>
+        <td class="period-pct-foh">8.1%</td>
+        <td class="period-pct-boh">10.8%</td>
+      </tr>
+      <tr id="d-MAX-1" style="display:none">
+        <td colspan="3" style="padding:0;background:#F2EBE0">
+          <table>
+            <thead><tr>
+              <th style="padding-left:32px">Pay Period</th>
+              <th style="color:#4A7C59">FOH %</th>
+              <th style="color:#4A7FA5">BOH %</th>
+            </tr></thead>
+            <tbody><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
+          <td style="padding:8px 20px 8px 32px;font-size:12px;color:#5C4F42">PP 1 <span style="color:#B8A898">12/28/25</span></td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7C59">7.0%</td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7FA5">10.3%</td>
+        </tr><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
+          <td style="padding:8px 20px 8px 32px;font-size:12px;color:#5C4F42">PP 2 <span style="color:#B8A898">1/11/26</span></td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7C59">9.1%</td>
+          <td style="padding:8px 20px;font-family:Georgia,serif;font-size:13px;color:#4A7FA5">11.3%</td>
+        </tr></tbody>
+          </table>
+        </td>
       </tr></tbody>
-          </table>
-        </div>
+        </table>
       </div>
-  
-      <div style="background:white;border:1px solid #E8DDD0;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(45,40,32,0.08)">
-        <div style="padding:18px 28px;border-bottom:1px solid #F0E8DC;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#2D2820">Labor — FOH & BOH</div>
-          <span style="font-size:11px;padding:4px 10px;border-radius:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#FDF0E8;color:#D4783A">Click period to expand</span>
-        </div>
-        <div style="max-height:600px;overflow-y:auto">
-          <table style="width:100%;border-collapse:collapse">
-            <thead><tr style="background:#F2EBE0;border-bottom:1px solid #E8DDD0">
-              <th style="padding:10px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8C7D6E;font-weight:700">Period</th>
-              <th style="padding:10px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#4A7C59;font-weight:700">FOH Avg %</th>
-              <th style="padding:10px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#4A7FA5;font-weight:700">BOH Avg %</th>
-            </tr></thead>
-            <tbody>
-        <tr style="background:#F8F5F0;border-bottom:1px solid #E8DDD0;cursor:pointer" onclick="toggleDetail('detail-MAX-4')">
-          <td style="padding:14px 20px">
-            <div style="font-size:16px;font-weight:700;color:#2D2820">Period 4</div>
-            <div style="font-size:11px;color:#D4783A;font-weight:600;margin-top:2px">In Progress</div>
-          </td>
-          <td style="padding:14px 20px;font-family:Georgia,serif;font-size:20px;font-weight:700;color:#4A7C59">—</td>
-          <td style="padding:14px 20px;font-family:Georgia,serif;font-size:20px;font-weight:700;color:#4A7FA5">—</td>
-        </tr>
-        <tr id="detail-MAX-4" style="display:table-row">
-          <td colspan="3" style="padding:0;background:#F2EBE0">
-            <table style="width:100%;border-collapse:collapse">
-              <thead><tr style="background:#E8DDD0">
-                <th style="padding:8px 20px 8px 36px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#8C7D6E;font-weight:700">Pay Period</th>
-                <th style="padding:8px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#4A7C59;font-weight:700">FOH %</th>
-                <th style="padding:8px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#4A7FA5;font-weight:700">BOH %</th>
-              </tr></thead>
-              <tbody><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
-          <td style="padding:10px 20px 10px 36px;font-size:13px;color:#5C4F42">PP 7 <span style="color:#B8A898">3/22/26</span></td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7C59">7.8%</td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7FA5">11.2%</td>
-        </tr></tbody>
-            </table>
-          </td>
-        </tr>
-        <tr style="background:#F8F5F0;border-bottom:1px solid #E8DDD0;cursor:pointer" onclick="toggleDetail('detail-MAX-3')">
-          <td style="padding:14px 20px">
-            <div style="font-size:16px;font-weight:700;color:#2D2820">Period 3</div>
-            
-          </td>
-          <td style="padding:14px 20px;font-family:Georgia,serif;font-size:20px;font-weight:700;color:#4A7C59">7.5%</td>
-          <td style="padding:14px 20px;font-family:Georgia,serif;font-size:20px;font-weight:700;color:#4A7FA5">11.4%</td>
-        </tr>
-        <tr id="detail-MAX-3" style="display:none">
-          <td colspan="3" style="padding:0;background:#F2EBE0">
-            <table style="width:100%;border-collapse:collapse">
-              <thead><tr style="background:#E8DDD0">
-                <th style="padding:8px 20px 8px 36px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#8C7D6E;font-weight:700">Pay Period</th>
-                <th style="padding:8px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#4A7C59;font-weight:700">FOH %</th>
-                <th style="padding:8px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#4A7FA5;font-weight:700">BOH %</th>
-              </tr></thead>
-              <tbody><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
-          <td style="padding:10px 20px 10px 36px;font-size:13px;color:#5C4F42">PP 5 <span style="color:#B8A898">2/22/26</span></td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7C59">7.3%</td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7FA5">11.0%</td>
-        </tr><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
-          <td style="padding:10px 20px 10px 36px;font-size:13px;color:#5C4F42">PP 6 <span style="color:#B8A898">3/8/26</span></td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7C59">7.7%</td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7FA5">11.7%</td>
-        </tr></tbody>
-            </table>
-          </td>
-        </tr>
-        <tr style="background:#F8F5F0;border-bottom:1px solid #E8DDD0;cursor:pointer" onclick="toggleDetail('detail-MAX-2')">
-          <td style="padding:14px 20px">
-            <div style="font-size:16px;font-weight:700;color:#2D2820">Period 2</div>
-            
-          </td>
-          <td style="padding:14px 20px;font-family:Georgia,serif;font-size:20px;font-weight:700;color:#4A7C59">9.1%</td>
-          <td style="padding:14px 20px;font-family:Georgia,serif;font-size:20px;font-weight:700;color:#4A7FA5">13.3%</td>
-        </tr>
-        <tr id="detail-MAX-2" style="display:none">
-          <td colspan="3" style="padding:0;background:#F2EBE0">
-            <table style="width:100%;border-collapse:collapse">
-              <thead><tr style="background:#E8DDD0">
-                <th style="padding:8px 20px 8px 36px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#8C7D6E;font-weight:700">Pay Period</th>
-                <th style="padding:8px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#4A7C59;font-weight:700">FOH %</th>
-                <th style="padding:8px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#4A7FA5;font-weight:700">BOH %</th>
-              </tr></thead>
-              <tbody><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
-          <td style="padding:10px 20px 10px 36px;font-size:13px;color:#5C4F42">PP 3 <span style="color:#B8A898">1/25/26</span></td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7C59">9.8%</td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7FA5">14.1%</td>
-        </tr><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
-          <td style="padding:10px 20px 10px 36px;font-size:13px;color:#5C4F42">PP 4 <span style="color:#B8A898">2/8/26</span></td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7C59">8.4%</td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7FA5">12.5%</td>
-        </tr></tbody>
-            </table>
-          </td>
-        </tr>
-        <tr style="background:#F8F5F0;border-bottom:1px solid #E8DDD0;cursor:pointer" onclick="toggleDetail('detail-MAX-1')">
-          <td style="padding:14px 20px">
-            <div style="font-size:16px;font-weight:700;color:#2D2820">Period 1</div>
-            
-          </td>
-          <td style="padding:14px 20px;font-family:Georgia,serif;font-size:20px;font-weight:700;color:#4A7C59">8.1%</td>
-          <td style="padding:14px 20px;font-family:Georgia,serif;font-size:20px;font-weight:700;color:#4A7FA5">10.8%</td>
-        </tr>
-        <tr id="detail-MAX-1" style="display:none">
-          <td colspan="3" style="padding:0;background:#F2EBE0">
-            <table style="width:100%;border-collapse:collapse">
-              <thead><tr style="background:#E8DDD0">
-                <th style="padding:8px 20px 8px 36px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#8C7D6E;font-weight:700">Pay Period</th>
-                <th style="padding:8px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#4A7C59;font-weight:700">FOH %</th>
-                <th style="padding:8px 20px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#4A7FA5;font-weight:700">BOH %</th>
-              </tr></thead>
-              <tbody><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
-          <td style="padding:10px 20px 10px 36px;font-size:13px;color:#5C4F42">PP 1 <span style="color:#B8A898">12/28/25</span></td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7C59">7.0%</td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7FA5">10.3%</td>
-        </tr><tr style="border-bottom:1px solid #F0E8DC;background:#FDFAF6">
-          <td style="padding:10px 20px 10px 36px;font-size:13px;color:#5C4F42">PP 2 <span style="color:#B8A898">1/11/26</span></td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7C59">9.1%</td>
-          <td style="padding:10px 20px;font-family:Georgia,serif;font-size:14px;color:#4A7FA5">11.3%</td>
-        </tr></tbody>
-            </table>
-          </td>
-        </tr></tbody>
-          </table>
-        </div>
-      </div>
+    </div>
 </div>
+
 <script>
 function toggleDetail(id) {
   const el = document.getElementById(id);
